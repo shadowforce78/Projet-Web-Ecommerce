@@ -1,0 +1,32 @@
+UTILISATEUR: id utilisateur, email, telephone, password hash, date creation
+PANIER: id panier, token session, date creation, date maj
+RATTACHER_PANIER, 01 PANIER, 0N UTILISATEUR
+COMMANDE: id commande, prenom, nom, email, adresse livraison, departement livraison, pays livraison, statut, montant total, date creation
+PASSER_COMMANDE, 01 COMMANDE, 0N UTILISATEUR
+
+LIGNE_PANIER: id ligne panier, quantite, prix unitaire
+CONTENIR_LIGNE_PANIER, 11 LIGNE_PANIER, 0N PANIER
+PRODUIT: id produit, nom, description, image url, prix base, actif, date creation
+CONCERNER_PRODUIT_PANIER, 11 LIGNE_PANIER, 0N PRODUIT
+CATEGORIE: id categorie, nom, slug
+
+APPARTENIR, 11 PRODUIT, 0N CATEGORIE
+LIGNE_COMMANDE: id ligne commande, quantite, prix unitaire, nom produit snapshot
+DETAILLER_COMMANDE, 11 LIGNE_COMMANDE, 1N COMMANDE
+CONCERNER_PRODUIT_COMMANDE, 11 LIGNE_COMMANDE, 0N PRODUIT
+PAIEMENT: id paiement, methode, reference transaction, montant, statut, date paiement, date creation
+
+REGLER, 11 PAIEMENT, 0N COMMANDE
+GROUPE_OPTION: id groupe option, nom
+DEFINIR, 11 VALEUR_OPTION, 0N GROUPE_OPTION
+VALEUR_OPTION: id valeur option, valeur, surcout
+PROPOSER_OPTION, 0N PRODUIT, 0N VALEUR_OPTION
+
+CHOISIR_OPTION_PANIER, 0N LIGNE_PANIER, 0N VALEUR_OPTION
+CHOISIR_OPTION_COMMANDE, 0N LIGNE_COMMANDE, 0N VALEUR_OPTION
+RECOMMANDER, 0N [source] PRODUIT, 0N [cible] PRODUIT: rang
+FAQ_CATEGORIE: id faq categorie, nom, ordre affichage
+FAQ_QUESTION: id faq question, question, reponse, ordre affichage, actif
+
+CLASSER_FAQ, 11 FAQ_QUESTION, 0N FAQ_CATEGORIE
+MESSAGE_CONTACT: id message, email, sujet, corps, statut, date creation
