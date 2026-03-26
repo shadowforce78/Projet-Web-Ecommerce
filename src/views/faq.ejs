@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+  <main class="faq-page container">
+    <div class="section-header" style="padding-top:2rem;">
+      <span class="section-label">Centre d'aide</span>
+      <h1 class="section-title">FAQ & SUPPORT</h1>
+      <div class="section-bar"></div>
+    </div>
+
+    <% if (typeof(success) !== 'undefined' || (typeof(currentPath) !== 'undefined' && currentPath.includes('success'))) { %>
+    <% } %>
+
+    <div class="faq-grid">
+      <!-- FAQ -->
+      <div>
+        <% if (Object.keys(faqByCategory).length > 0) { %>
+          <% for (const [catName, questions] of Object.entries(faqByCategory)) { %>
+            <div class="faq-category">
+              <h3 class="faq-category__title"><%= catName %></h3>
+              <% questions.forEach(q => { %>
+                <div class="faq-item">
+                  <button class="faq-item__question" onclick="toggleFaq(this)">
+                    <span><%= q.question %></span>
+                    <span class="material-symbols-outlined faq-item__icon">expand_more</span>
+                  </button>
+                  <div class="faq-item__answer">
+                    <p><%= q.answer %></p>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="empty-state">
+            <span class="material-symbols-outlined empty-state__icon">help_center</span>
+            <p class="empty-state__text">La FAQ sera bientôt disponible.</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <div class="contact-form">
+          <h3 class="contact-form__title">CONTACTEZ-NOUS</h3>
+          <p class="text-muted mb-3" style="font-size:0.85rem;">
+            Notre équipe de conciergerie est disponible pour répondre à toutes vos questions.
+          </p>
+
+          <form action="/contact" method="POST">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" placeholder="votre@email.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sujet</label>
+              <select name="subject" class="form-select" required>
+                <option value="">Sélectionnez un sujet</option>
+                <option value="Commande">Question sur une commande</option>
+                <option value="Livraison">Livraison & Retours</option>
+                <option value="Produit">Information produit</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea name="body" class="form-input" placeholder="Votre message..." rows="5" required style="border:1px solid var(--outline);padding:1rem;min-height:120px;resize:vertical;"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">Envoyer</button>
+          </form>
+        </div>
+
+        <div style="margin-top:2rem;padding:0 1rem;">
+          <h4 style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--on-surface-variant);margin-bottom:1rem;font-weight:700;">ASSISTANCE DIRECTE</h4>
+          <p style="font-size:0.85rem;margin-bottom:0.5rem;">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:0.5rem;">mail</span>
+            concierge@monolith.com
+          </p>
+          <p style="font-size:0.85rem;">
+            <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;margin-right:0.5rem;">support_agent</span>
+            +33 1 23 45 67 89
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      item.classList.toggle('faq-item--open');
+    }
+  </script>
+
+<%- include('partials/footer') %>

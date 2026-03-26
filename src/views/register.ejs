@@ -1,0 +1,59 @@
+<main class="auth-page">
+  <!-- Visuel -->
+  <div class="auth-visual">
+    <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&q=80" alt="Architecture" class="auth-visual__image">
+    <div class="auth-visual__content">
+      <h1 class="auth-visual__title">MONOLITH</h1>
+      <p class="auth-visual__desc">REJOIGNEZ LE COLLECTIF. CRÉEZ VOTRE COMPTE POUR ACCÉDER À L'UNIVERS MONOLITH.</p>
+      <div class="auth-visual__bar"></div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="auth-form-side">
+    <div class="auth-form-wrapper">
+      <div class="auth-tabs">
+        <a href="/auth/login" class="auth-tab">Connexion</a>
+        <a href="/auth/register" class="auth-tab auth-tab--active">Inscription</a>
+      </div>
+
+      <h2 class="auth-form__title">Créer un compte.</h2>
+      <p class="auth-form__subtitle">Rejoignez l'univers MONOLITH et accédez à des collections exclusives.</p>
+
+      <% if (error) { %>
+        <div class="form-error"><%= error %></div>
+      <% } %>
+
+      <form action="/auth/register" method="POST">
+        <div class="form-group">
+          <label class="form-label">Adresse email</label>
+          <input type="email" name="email" class="form-input" placeholder="votre@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Téléphone (optionnel)</label>
+          <input type="tel" name="phone" class="form-input" placeholder="+33 6 12 34 56 78">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" name="password" class="form-input" placeholder="Minimum 6 caractères" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmer le mot de passe</label>
+          <input type="password" name="password_confirm" class="form-input" placeholder="••••••••" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn--primary btn--full btn--lg mt-2">Créer mon compte</button>
+      </form>
+
+      <p class="auth-note">
+        Déjà un compte ? <a href="/auth/login">Se connecter</a>
+      </p>
+      <p class="auth-note" style="margin-top:0.5rem;font-size:0.65rem;">
+        En créant un compte, vous acceptez nos <a href="#">Conditions d'utilisation</a> et notre <a href="#">Politique de confidentialité</a>.
+      </p>
+    </div>
+  </div>
+</main>
+
+<link rel="stylesheet" href="/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">

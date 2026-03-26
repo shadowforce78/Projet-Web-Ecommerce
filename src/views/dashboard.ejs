@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+  <main class="dashboard-page container">
+    <div class="dashboard-header">
+      <span class="section-label">Mon espace</span>
+      <h1 class="dashboard-header__greeting">Bonjour, <%= profile.email %></h1>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Navigation -->
+      <nav class="dashboard-nav">
+        <a href="/dashboard" class="dashboard-nav__link dashboard-nav__link--active">
+          <span class="material-symbols-outlined">receipt_long</span>
+          Mes Commandes
+        </a>
+        <a href="#" class="dashboard-nav__link">
+          <span class="material-symbols-outlined">person</span>
+          Mon Profil
+        </a>
+        <a href="/auth/logout" class="dashboard-nav__link">
+          <span class="material-symbols-outlined">logout</span>
+          Déconnexion
+        </a>
+      </nav>
+
+      <!-- Contenu -->
+      <div>
+        <h2 style="font-family:var(--font-headline);font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:-0.02em;">
+          Historique des commandes
+        </h2>
+
+        <% if (orders.length > 0) { %>
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>N° Commande</th>
+                <th>Date</th>
+                <th>Articles</th>
+                <th>Total</th>
+                <th>Statut</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(order => { %>
+                <tr>
+                  <td style="font-family:var(--font-headline);font-weight:700;">#MNLTH-<%= String(order.id).padStart(5, '0') %></td>
+                  <td><%= new Date(order.created_at).toLocaleDateString('fr-FR') %></td>
+                  <td><%= order.item_count %> article<%= order.item_count > 1 ? 's' : '' %></td>
+                  <td style="font-weight:600;"><%= parseFloat(order.total_amount).toFixed(2) %> €</td>
+                  <td>
+                    <span class="status-badge status-badge--<%= order.status %>">
+                      <%= order.status === 'pending' ? 'En attente' : order.status === 'paid' ? 'Payée' : 'Annulée' %>
+                    </span>
+                  </td>
+                  <td>
+                    <a href="/dashboard/order/<%= order.id %>" class="btn btn--sm btn--outline-dark">Détails</a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <div class="empty-state">
+            <span class="material-symbols-outlined empty-state__icon">receipt_long</span>
+            <p class="empty-state__text">Vous n'avez pas encore passé de commande.</p>
+            <a href="/products" class="btn btn--primary">Découvrir la boutique</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+<%- include('partials/footer') %>

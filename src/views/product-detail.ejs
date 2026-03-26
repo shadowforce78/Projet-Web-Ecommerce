@@ -1,0 +1,121 @@
+<%- include('partials/header') %>
+
+  <main class="container">
+    <div class="product-detail">
+      <!-- Galerie -->
+      <div class="product-detail__gallery">
+        <% if (product.image_url) { %>
+          <img src="<%= product.image_url %>" alt="<%= product.name %>">
+        <% } else { %>
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80" alt="<%= product.name %>">
+        <% } %>
+      </div>
+
+      <!-- Informations -->
+      <div class="product-detail__info">
+        <span class="product-detail__category"><%= product.category_name %></span>
+        <h1 class="product-detail__name"><%= product.name %></h1>
+        <p class="product-detail__price"><%= parseFloat(product.base_price).toFixed(2) %> €</p>
+
+        <% if (product.description) { %>
+          <p class="product-detail__description"><%= product.description %></p>
+        <% } %>
+
+        <form action="/cart/add" method="POST">
+          <input type="hidden" name="product_id" value="<%= product.id %>">
+
+          <!-- Options -->
+          <% if (Object.keys(optionGroups).length > 0) { %>
+            <div class="product-detail__options">
+              <% for (const [groupName, values] of Object.entries(optionGroups)) { %>
+                <div class="option-group">
+                  <label class="option-group__label"><%= groupName %></label>
+                  <div class="option-group__values">
+                    <% values.forEach((val, i) => { %>
+                      <label class="option-value" onclick="this.classList.toggle('option-value--selected')">
+                        <input type="checkbox" name="options" value="<%= val.option_id %>">
+                        <span><%= val.value %><% if (parseFloat(val.extra_price) > 0) { %> (+<%= parseFloat(val.extra_price).toFixed(2) %>€)<% } %></span>
+                      </label>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% } %>
+
+          <!-- Quantité -->
+          <div class="option-group">
+            <label class="option-group__label">Quantité</label>
+            <div class="quantity-selector">
+              <button type="button" onclick="updateQty(-1)">
+                <span class="material-symbols-outlined">remove</span>
+              </button>
+              <input type="number" name="quantity" id="qty" value="1" min="1" max="99">
+              <button type="button" onclick="updateQty(1)">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg">Ajouter au Panier</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Produits Recommandés -->
+    <% if (recommended.length > 0) { %>
+      <section class="py-section">
+        <div class="section-header">
+          <span class="section-label">Vous aimerez aussi</span>
+          <h2 class="section-title">RECOMMANDATIONS</h2>
+          <div class="section-bar"></div>
+        </div>
+        <div class="products-grid">
+          <% recommended.forEach(rec => { %>
+            <a href="/products/<%= rec.id %>" class="product-card">
+              <div class="product-card__image-wrapper">
+                <% if (rec.image_url) { %>
+                  <img src="<%= rec.image_url %>" alt="<%= rec.name %>" class="product-card__image">
+                <% } else { %>
+                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70" alt="<%= rec.name %>" class="product-card__image">
+                <% } %>
+              </div>
+              <div class="product-card__info">
+                <div class="product-card__info-top">
+                  <h4 class="product-card__name"><%= rec.name %></h4>
+                  <span class="product-card__price"><%= parseFloat(rec.base_price).toFixed(2) %> €</span>
+                </div>
+                <p class="product-card__category"><%= rec.category_name %></p>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+    <% } %>
+  </main>
+
+  <script>
+    function updateQty(delta) {
+      const input = document.getElementById('qty');
+      const newVal = Math.max(1, parseInt(input.value) + delta);
+      input.value = newVal;
+    }
+
+    // Option selection (radio-like behavior per group)
+    document.querySelectorAll('.option-group').forEach(group => {
+      group.querySelectorAll('.option-value').forEach(label => {
+        label.addEventListener('click', () => {
+          // Toggle selected class
+          const siblings = group.querySelectorAll('.option-value');
+          siblings.forEach(s => {
+            if (s !== label) {
+              s.classList.remove('option-value--selected');
+              s.querySelector('input').checked = false;
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+<%- include('partials/footer') %>

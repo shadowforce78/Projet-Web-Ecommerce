@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+
+  <main class="dashboard-page container">
+    <a href="/dashboard" class="btn btn--outline-dark btn--sm mb-4" style="margin-top:2rem;">
+      <span class="material-symbols-outlined" style="font-size:0.9rem;">arrow_back</span>
+      Retour
+    </a>
+
+    <div class="section-header">
+      <span class="section-label">Commande</span>
+      <h1 class="section-title" style="font-size:2rem;">#MNLTH-<%= String(order.id).padStart(5, '0') %></h1>
+      <div class="section-bar"></div>
+    </div>
+
+    <div class="checkout-layout">
+      <div>
+        <% items.forEach(item => { %>
+          <div class="cart-item">
+            <% if (item.image_url) { %>
+              <img src="<%= item.image_url %>" alt="<%= item.product_name_snapshot %>" class="cart-item__image">
+            <% } else { %>
+              <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=70" alt="<%= item.product_name_snapshot %>" class="cart-item__image">
+            <% } %>
+            <div class="cart-item__info">
+              <div>
+                <h3 class="cart-item__name"><%= item.product_name_snapshot %></h3>
+                <p class="cart-item__desc">Quantité: <%= item.quantity %></p>
+              </div>
+              <p class="cart-item__price"><%= (parseFloat(item.unit_price) * item.quantity).toFixed(2) %> €</p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <div>
+        <div class="checkout-summary">
+          <h2 class="checkout-summary__title">Détails</h2>
+          <div class="checkout-summary__item">
+            <span>Statut</span>
+            <span><%= order.status === 'pending' ? 'En attente' : order.status === 'paid' ? 'Payée' : 'Annulée' %></span>
+          </div>
+          <div class="checkout-summary__item">
+            <span>Date</span>
+            <span><%= new Date(order.created_at).toLocaleDateString('fr-FR') %></span>
+          </div>
+          <div class="checkout-summary__item">
+            <span>Adresse</span>
+            <span><%= order.shipping_address %></span>
+          </div>
+          <div class="checkout-summary__total">
+            <span class="checkout-summary__total-label">Total</span>
+            <span class="checkout-summary__total-amount"><%= parseFloat(order.total_amount).toFixed(2) %> €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<%- include('partials/footer') %>

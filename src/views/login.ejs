@@ -1,0 +1,55 @@
+<main class="auth-page">
+  <!-- Visuel -->
+  <div class="auth-visual">
+    <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&q=80" alt="Architecture" class="auth-visual__image">
+    <div class="auth-visual__content">
+      <h1 class="auth-visual__title">MONOLITH</h1>
+      <p class="auth-visual__desc">ACCÉDEZ À L'ARCHIVE CURATÉE. UN SANCTUAIRE POUR LA PRÉCISION ARCHITECTURALE ET LE DESIGN MINIMALISTE.</p>
+      <div class="auth-visual__bar"></div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="auth-form-side">
+    <div class="auth-form-wrapper">
+      <div class="auth-tabs">
+        <a href="/auth/login" class="auth-tab auth-tab--active">Connexion</a>
+        <a href="/auth/register" class="auth-tab">Inscription</a>
+      </div>
+
+      <h2 class="auth-form__title">Bon retour.</h2>
+      <p class="auth-form__subtitle">Veuillez entrer vos identifiants pour accéder à votre profil.</p>
+
+      <% if (error) { %>
+        <div class="form-error"><%= error %></div>
+      <% } %>
+
+      <form action="/auth/login" method="POST">
+        <div class="form-group">
+          <label class="form-label">Adresse email</label>
+          <input type="email" name="email" class="form-input" placeholder="votre@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <div class="auth-form__footer">
+          <label class="form-checkbox">
+            <input type="checkbox">
+            <span>Se souvenir de moi</span>
+          </label>
+          <a href="#" class="auth-form__forgot">Mot de passe oublié ?</a>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full btn--lg">Se Connecter</button>
+      </form>
+
+      <p class="auth-note">
+        Pas encore de compte ? <a href="/auth/register">Créer un compte</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<link rel="stylesheet" href="/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">

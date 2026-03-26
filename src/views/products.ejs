@@ -1,0 +1,74 @@
+<%- include('partials/header') %>
+
+  <main class="catalog-page container">
+    <div class="section-header" style="padding-top: 2rem;">
+      <span class="section-label">Notre Collection</span>
+      <h1 class="section-title">BOUTIQUE</h1>
+      <div class="section-bar"></div>
+    </div>
+
+    <!-- Recherche -->
+    <form action="/products" method="GET" class="search-bar">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" name="search" placeholder="Rechercher un produit..." value="<%= filters.search || '' %>">
+      <% if (filters.category) { %>
+        <input type="hidden" name="category" value="<%= filters.category %>">
+      <% } %>
+    </form>
+
+    <!-- Filtres & Tri -->
+    <div class="catalog-controls">
+      <div class="catalog-filters">
+        <a href="/products" class="filter-btn <%= !filters.category ? 'filter-btn--active' : '' %>">Tout</a>
+        <% categories.forEach(cat => { %>
+          <a href="/products?category=<%= cat.slug %><%= filters.sort ? '&sort=' + filters.sort : '' %>"
+             class="filter-btn <%= filters.category === cat.slug ? 'filter-btn--active' : '' %>">
+            <%= cat.name %>
+          </a>
+        <% }) %>
+      </div>
+      <div class="catalog-sort">
+        <span class="catalog-sort__label">Trier par</span>
+        <select onchange="window.location.href=this.value">
+          <option value="/products?<%= filters.category ? 'category=' + filters.category + '&' : '' %>sort=newest" <%= filters.sort === 'newest' || !filters.sort ? 'selected' : '' %>>Plus récents</option>
+          <option value="/products?<%= filters.category ? 'category=' + filters.category + '&' : '' %>sort=price_asc" <%= filters.sort === 'price_asc' ? 'selected' : '' %>>Prix croissant</option>
+          <option value="/products?<%= filters.category ? 'category=' + filters.category + '&' : '' %>sort=price_desc" <%= filters.sort === 'price_desc' ? 'selected' : '' %>>Prix décroissant</option>
+          <option value="/products?<%= filters.category ? 'category=' + filters.category + '&' : '' %>sort=name" <%= filters.sort === 'name' ? 'selected' : '' %>>Nom A-Z</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="catalog-count mb-2"><%= products.length %> produit<%= products.length > 1 ? 's' : '' %></p>
+
+    <!-- Grille Produits -->
+    <% if (products.length > 0) { %>
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <a href="/products/<%= product.id %>" class="product-card">
+            <div class="product-card__image-wrapper">
+              <% if (product.image_url) { %>
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" class="product-card__image">
+              <% } else { %>
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70" alt="<%= product.name %>" class="product-card__image">
+              <% } %>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__info-top">
+                <h4 class="product-card__name"><%= product.name %></h4>
+                <span class="product-card__price"><%= parseFloat(product.base_price).toFixed(2) %> €</span>
+              </div>
+              <p class="product-card__category"><%= product.category_name %></p>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-state__icon">search_off</span>
+        <p class="empty-state__text">Aucun produit trouvé.</p>
+        <a href="/products" class="btn btn--primary">Voir tous les produits</a>
+      </div>
+    <% } %>
+  </main>
+
+<%- include('partials/footer') %>

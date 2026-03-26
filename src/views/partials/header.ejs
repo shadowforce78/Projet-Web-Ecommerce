@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar__inner">
+      <a href="/" class="navbar__logo">MONOLITH</a>
+      <ul class="navbar__links">
+        <li><a href="/products" class="navbar__link <%= currentPath === '/products' ? 'navbar__link--active' : '' %>">Shop</a></li>
+        <li><a href="/products?category=collections" class="navbar__link">Collections</a></li>
+        <li><a href="/story" class="navbar__link <%= currentPath === '/story' ? 'navbar__link--active' : '' %>">Story</a></li>
+        <li><a href="/faq" class="navbar__link <%= currentPath === '/faq' ? 'navbar__link--active' : '' %>">Support</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <a href="/cart" class="navbar__action-btn">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          <% if (cartCount > 0) { %>
+            <span class="navbar__badge"><%= cartCount %></span>
+          <% } %>
+        </a>
+        <% if (user) { %>
+          <a href="/dashboard" class="navbar__action-btn">
+            <span class="material-symbols-outlined">person</span>
+          </a>
+        <% } else { %>
+          <a href="/auth/login" class="navbar__action-btn">
+            <span class="material-symbols-outlined">person</span>
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </nav>

@@ -1,0 +1,99 @@
+<%- include('partials/header') %>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1920&q=80" alt="Architecture minimaliste" class="hero__image">
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <span class="hero__label">Collection Printemps / Été 2026</span>
+        <h1 class="hero__title">ARCHITECTURAL<br>PRECISION.</h1>
+        <p class="hero__subtitle">Une collection définie par l'intégrité structurelle et la profondeur monochromatique. Conçue pour le monolithe moderne.</p>
+        <div class="hero__actions">
+          <a href="/products" class="btn btn--primary btn--lg">Explorer la Collection</a>
+          <a href="/story" class="btn btn--outline btn--lg">Notre Histoire</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catégories Bento Grid -->
+    <section class="py-section container-wide">
+      <div class="section-header">
+        <h2 class="section-title">CATÉGORIES</h2>
+        <div class="section-bar"></div>
+      </div>
+
+      <% if (categories.length > 0) { %>
+        <div class="bento-grid">
+          <% categories.forEach((cat, i) => { %>
+            <a href="/products?category=<%= cat.slug %>" class="bento-item <%= i === 0 ? 'bento-item--large' : (i === 1 ? 'bento-item--wide' : '') %>">
+              <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=70" alt="<%= cat.name %>" class="bento-item__image">
+              <div class="bento-item__overlay"></div>
+              <div class="bento-item__content">
+                <h3 class="bento-item__title"><%= cat.name %></h3>
+                <span class="bento-item__link">Voir la série</span>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <span class="material-symbols-outlined empty-state__icon">category</span>
+          <p class="empty-state__text">Les catégories seront bientôt disponibles.</p>
+        </div>
+      <% } %>
+    </section>
+
+    <!-- Produits Populaires -->
+    <section class="py-section bg-light">
+      <div class="container-wide">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <span class="section-label">Favoris globaux</span>
+            <h2 class="section-title">BESTSELLERS</h2>
+          </div>
+          <a href="/products" class="btn btn--outline-dark btn--sm">Voir tout</a>
+        </div>
+
+        <% if (products.length > 0) { %>
+          <div class="products-scroll">
+            <% products.forEach(product => { %>
+              <a href="/products/<%= product.id %>" class="product-card">
+                <div class="product-card__image-wrapper">
+                  <% if (product.image_url) { %>
+                    <img src="<%= product.image_url %>" alt="<%= product.name %>" class="product-card__image">
+                  <% } else { %>
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70" alt="<%= product.name %>" class="product-card__image">
+                  <% } %>
+                  <span class="product-card__badge">Nouveau</span>
+                </div>
+                <div class="product-card__info">
+                  <div class="product-card__info-top">
+                    <h4 class="product-card__name"><%= product.name %></h4>
+                    <span class="product-card__price"><%= parseFloat(product.base_price).toFixed(2) %> €</span>
+                  </div>
+                  <p class="product-card__category"><%= product.category_name %></p>
+                </div>
+              </a>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div class="empty-state">
+            <span class="material-symbols-outlined empty-state__icon">inventory_2</span>
+            <p class="empty-state__text">Aucun produit disponible pour le moment.</p>
+          </div>
+        <% } %>
+      </div>
+    </section>
+
+    <!-- Citation -->
+    <section class="story-quote">
+      <span class="story-quote__bg-text">MONO</span>
+      <div>
+        <h3 class="story-quote__text">« Nous construisons les cadres, vous apportez la lumière. »</h3>
+        <div class="story-quote__bar"></div>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>

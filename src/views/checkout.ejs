@@ -1,0 +1,116 @@
+<%- include('partials/header') %>
+
+  <main class="checkout-page container">
+    <div class="section-header" style="padding-top: 2rem;">
+      <h1 class="section-title">CHECKOUT</h1>
+      <div class="section-bar"></div>
+    </div>
+
+    <form action="/checkout/place-order" method="POST">
+      <div class="checkout-layout">
+        <!-- Formulaire -->
+        <div>
+          <div class="checkout-section">
+            <h3 class="checkout-section__title">Informations Personnelles</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Prénom</label>
+                <input type="text" name="first_name" class="form-input" placeholder="Jean" required value="<%= user ? '' : '' %>">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nom</label>
+                <input type="text" name="last_name" class="form-input" placeholder="Dupont" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" placeholder="jean@exemple.com" required value="<%= user ? user.email : '' %>">
+            </div>
+          </div>
+
+          <div class="checkout-section">
+            <h3 class="checkout-section__title">Adresse de Livraison</h3>
+            <div class="form-group">
+              <label class="form-label">Adresse</label>
+              <input type="text" name="address" class="form-input" placeholder="12 Rue de la Paix" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Département / Ville</label>
+                <input type="text" name="department" class="form-input" placeholder="75 - Paris" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pays</label>
+                <select name="country" class="form-select" required>
+                  <option value="France">France</option>
+                  <option value="Belgique">Belgique</option>
+                  <option value="Suisse">Suisse</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-section">
+            <h3 class="checkout-section__title">Moyen de Paiement</h3>
+            <div class="payment-methods">
+              <label class="payment-method payment-method--selected">
+                <input type="radio" name="payment_method" value="cb" checked>
+                <span class="material-symbols-outlined">credit_card</span>
+                <span class="payment-method__label">Carte Bancaire</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment_method" value="paypal">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                <span class="payment-method__label">PayPal</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment_method" value="virement">
+                <span class="material-symbols-outlined">account_balance</span>
+                <span class="payment-method__label">Virement Bancaire</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg mt-2">Confirmer la Commande</button>
+        </div>
+
+        <!-- Résumé -->
+        <div>
+          <div class="checkout-summary">
+            <h2 class="checkout-summary__title">Récapitulatif</h2>
+            <% cart.forEach(item => { %>
+              <div class="checkout-summary__item">
+                <span><%= item.name %> × <%= item.quantity %></span>
+                <span><%= (item.price * item.quantity).toFixed(2) %> €</span>
+              </div>
+            <% }) %>
+            <div class="checkout-summary__item" style="margin-top: 1rem;">
+              <span>Sous-total</span>
+              <span><%= total.toFixed(2) %> €</span>
+            </div>
+            <div class="checkout-summary__item">
+              <span>Livraison</span>
+              <span>Offerte</span>
+            </div>
+            <div class="checkout-summary__total">
+              <span class="checkout-summary__total-label">Total</span>
+              <span class="checkout-summary__total-amount"><%= total.toFixed(2) %> €</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Payment method selection UI
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.addEventListener('click', () => {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('payment-method--selected'));
+        method.classList.add('payment-method--selected');
+      });
+    });
+  </script>
+
+<%- include('partials/footer') %>

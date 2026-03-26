@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+
+  <main class="success-page container">
+    <section class="success-hero">
+      <div class="success-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <span class="section-label">Commande Confirmée</span>
+      <h1 class="success-title">MERCI POUR VOTRE ACHAT.</h1>
+
+      <div class="success-details">
+        <div>
+          <p class="success-details__label">Numéro de commande</p>
+          <p class="success-details__value">#MNLTH-<%= String(order.id).padStart(5, '0') %></p>
+        </div>
+        <div class="text-right">
+          <p class="success-details__label">Montant Total</p>
+          <p class="success-details__value"><%= parseFloat(order.total_amount).toFixed(2) %> €</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Articles commandés -->
+    <section class="py-section">
+      <div class="section-header">
+        <h2 class="section-title" style="font-size:1.5rem;">RÉCAPITULATIF</h2>
+        <div class="section-bar"></div>
+      </div>
+
+      <% items.forEach(item => { %>
+        <div class="cart-item">
+          <% if (item.image_url) { %>
+            <img src="<%= item.image_url %>" alt="<%= item.product_name_snapshot %>" class="cart-item__image">
+          <% } else { %>
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=70" alt="<%= item.product_name_snapshot %>" class="cart-item__image">
+          <% } %>
+          <div class="cart-item__info">
+            <div>
+              <h3 class="cart-item__name"><%= item.product_name_snapshot %></h3>
+              <p class="cart-item__desc">Quantité: <%= item.quantity %></p>
+            </div>
+            <div>
+              <p class="cart-item__price"><%= (parseFloat(item.unit_price) * item.quantity).toFixed(2) %> €</p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </section>
+
+    <!-- Livraison -->
+    <section class="py-section">
+      <div style="max-width:500px;">
+        <h3 class="checkout-section__title">Livraison</h3>
+        <p style="font-size:0.9rem;line-height:1.8;">
+          <strong><%= order.first_name %> <%= order.last_name %></strong><br>
+          <%= order.shipping_address %><br>
+          <%= order.shipping_department %><br>
+          <%= order.shipping_country %>
+        </p>
+      </div>
+      <div style="margin-top:3rem; display:flex; gap:1rem;">
+        <a href="/products" class="btn btn--primary">Continuer les achats</a>
+        <% if (user) { %>
+          <a href="/dashboard" class="btn btn--outline-dark">Voir mes commandes</a>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer') %>
