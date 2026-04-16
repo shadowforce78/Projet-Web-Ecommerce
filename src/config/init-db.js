@@ -16,6 +16,7 @@ async function initDatabase() {
   console.log('🏗️  Initialisation de la base de données MONOLITH...\n');
 
   // Créer la BDD
+  await connection.query(`DROP DATABASE IF EXISTS \`${dbName}\``);
   await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
   await connection.query(`USE \`${dbName}\``);
   console.log(`✅ Base de données "${dbName}" créée/sélectionnée`);

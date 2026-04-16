@@ -32,7 +32,7 @@
                   <label class="option-group__label"><%= groupName %></label>
                   <div class="option-group__values">
                     <% values.forEach((val, i) => { %>
-                      <label class="option-value" onclick="this.classList.toggle('option-value--selected')">
+                      <label class="option-value">
                         <input type="checkbox" name="options" value="<%= val.option_id %>">
                         <span><%= val.value %><% if (parseFloat(val.extra_price) > 0) { %> (+<%= parseFloat(val.extra_price).toFixed(2) %>€)<% } %></span>
                       </label>
@@ -103,16 +103,21 @@
 
     // Option selection (radio-like behavior per group)
     document.querySelectorAll('.option-group').forEach(group => {
-      group.querySelectorAll('.option-value').forEach(label => {
-        label.addEventListener('click', () => {
-          // Toggle selected class
-          const siblings = group.querySelectorAll('.option-value');
-          siblings.forEach(s => {
-            if (s !== label) {
-              s.classList.remove('option-value--selected');
-              s.querySelector('input').checked = false;
-            }
-          });
+      const inputs = group.querySelectorAll('input[type="checkbox"]');
+      inputs.forEach(input => {
+        input.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            // Uncheck other inputs in the same group and remove class
+            inputs.forEach(otherInput => {
+              if (otherInput !== input) {
+                otherInput.checked = false;
+                otherInput.parentElement.classList.remove('option-value--selected');
+              }
+            });
+            input.parentElement.classList.add('option-value--selected');
+          } else {
+            input.parentElement.classList.remove('option-value--selected');
+          }
         });
       });
     });
