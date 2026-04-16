@@ -175,7 +175,8 @@ async function initDatabase() {
     ('Essentials', 'essentials'),
     ('Objects', 'objects'),
     ('Archive', 'archive'),
-    ('Accessories', 'accessories')
+    ('Accessories', 'accessories'),
+    ('Collections', 'collections')
   `);
   console.log('  ✅ Catégories insérées');
 
@@ -202,6 +203,8 @@ async function initDatabase() {
     [2, 'Geometric Knit Sweater', 'Pull en maille géométrique, motifs architecturaux subtils.', 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=70', 420.00],
     [4, 'Archive Jacket SS22', 'Veste de la collection Archive SS22. Pièce de collection.', 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=70', 690.00],
     [5, 'Obsidian Watch', 'Montre minimaliste cadran noir, bracelet cuir. Mouvement quartz suisse.', 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&q=70', 950.00],
+    [6, 'Collection Capsule 01', 'Une collection capsule exclusive regroupant nos pièces maîtresses de la saison.', 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=70', 1500.00],
+    [6, 'Set Minimaliste', 'Ensemble de bureau noir mat. Parfait pour les intérieurs épurés.', 'https://images.unsplash.com/photo-1499939667766-4afceb292d05?w=600&q=70', 210.00],
   ];
 
   for (const p of products) {
@@ -210,7 +213,7 @@ async function initDatabase() {
       p
     );
   }
-  console.log('  ✅ 10 produits insérés');
+  console.log(`  ✅ ${products.length} produits insérés`);
 
   // Associer les options aux produits (taille pour vêtements, couleur pour tous)
   const [prods] = await connection.query('SELECT id, category_id FROM products');
@@ -218,8 +221,8 @@ async function initDatabase() {
 
   for (const prod of prods) {
     for (const opt of opts) {
-      // Tailles pour vêtements (catégorie 1, 2, 4)
-      if (opt.option_group_id === 1 && [1, 2, 4].includes(prod.category_id)) {
+      // Tailles pour vêtements (catégorie 1, 2, 4, 6)
+      if (opt.option_group_id === 1 && [1, 2, 4, 6].includes(prod.category_id)) {
         await connection.query('INSERT IGNORE INTO product_option_values (product_id, option_value_id) VALUES (?, ?)', [prod.id, opt.id]);
       }
       // Couleurs pour tous
