@@ -2,6 +2,9 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
+// Note : init-db utilise une connexion directe (sans le Singleton Database)
+// car il doit créer la base de données avant de s'y connecter.
+
 async function initDatabase() {
   // Connexion sans DB pour la créer
   const connection = await mysql.createConnection({
