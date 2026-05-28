@@ -9,6 +9,11 @@
         <% } else { %>
           <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80" alt="<%= product.name %>">
         <% } %>
+        <% if (product.stock === 0) { %>
+          <div class="product-detail__out-of-stock-overlay">
+            <span>RUPTURE DE STOCK</span>
+          </div>
+        <% } %>
       </div>
 
       <!-- Informations -->
@@ -21,8 +26,22 @@
           <p class="product-detail__description"><%= product.description %></p>
         <% } %>
 
-        <form action="/cart/add" method="POST">
+        <!-- Stock Status -->
+        <% if (product.stock === 0) { %>
+          <div class="stock-alert stock-alert--danger">
+            <span class="material-symbols-outlined">error</span>
+            <span>Ce produit est actuellement en rupture de stock.</span>
+          </div>
+        <% } else if (product.stock <= 10) { %>
+          <div class="stock-alert stock-alert--warning">
+            <span class="material-symbols-outlined">local_fire_department</span>
+            <span>Dépêchez-vous ! Il ne reste que <strong><%= product.stock %></strong> exemplaire<%= product.stock > 1 ? 's' : '' %> en stock.</span>
+          </div>
+        <% } %>
+
+        <form action="/cart/add" method="POST" id="addToCartForm">
           <input type="hidden" name="product_id" value="<%= product.id %>">
+          <input type="hidden" id="maxStock" value="<%= product.stock %>">
 
           <!-- Options -->
           <% if (Object.keys(optionGroups).length > 0) { %>
@@ -47,17 +66,29 @@
           <div class="option-group">
             <label class="option-group__label">Quantité</label>
             <div class="quantity-selector">
-              <button type="button" onclick="updateQty(-1)">
+              <button type="button" onclick="updateQty(-1)" <% if (product.stock === 0) { %>disabled<% } %>>
                 <span class="material-symbols-outlined">remove</span>
               </button>
-              <input type="number" name="quantity" id="qty" value="1" min="1" max="99">
-              <button type="button" onclick="updateQty(1)">
+              <input type="number" name="quantity" id="qty" value="1" min="1" max="<%= product.stock > 0 ? product.stock : 1 %>" <% if (product.stock === 0) { %>disabled<% } %>>
+              <button type="button" onclick="updateQty(1)" <% if (product.stock === 0) { %>disabled<% } %>>
                 <span class="material-symbols-outlined">add</span>
               </button>
             </div>
+            <% if (product.stock > 0 && product.stock <= 10) { %>
+              <span class="stock-hint"><%= product.stock %> disponible<%= product.stock > 1 ? 's' : '' %></span>
+            <% } %>
           </div>
 
-          <button type="submit" class="btn btn--primary btn--full btn--lg">Ajouter au Panier</button>
+          <div id="stockError" class="stock-alert stock-alert--danger" style="display:none;">
+            <span class="material-symbols-outlined">error</span>
+            <span id="stockErrorMsg"></span>
+          </div>
+
+          <% if (product.stock > 0) { %>
+            <button type="submit" class="btn btn--primary btn--full btn--lg" id="addToCartBtn">Ajouter au Panier</button>
+          <% } else { %>
+            <button type="button" class="btn btn--primary btn--full btn--lg btn--disabled" disabled>Rupture de stock</button>
+          <% } %>
         </form>
       </div>
     </div>
@@ -79,6 +110,11 @@
                 <% } else { %>
                   <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70" alt="<%= rec.name %>" class="product-card__image">
                 <% } %>
+                <% if (rec.stock === 0) { %>
+                  <span class="product-card__badge product-card__badge--danger">Rupture</span>
+                <% } else if (rec.stock <= 10) { %>
+                  <span class="product-card__badge product-card__badge--warning">Plus que <%= rec.stock %></span>
+                <% } %>
               </div>
               <div class="product-card__info">
                 <div class="product-card__info-top">
@@ -95,11 +131,54 @@
   </main>
 
   <script>
+    const maxStock = parseInt(document.getElementById('maxStock').value);
+
     function updateQty(delta) {
       const input = document.getElementById('qty');
-      const newVal = Math.max(1, parseInt(input.value) + delta);
+      let newVal = parseInt(input.value) + delta;
+      newVal = Math.max(1, Math.min(newVal, maxStock));
       input.value = newVal;
+      checkStock();
     }
+
+    function checkStock() {
+      const qty = parseInt(document.getElementById('qty').value);
+      const errorDiv = document.getElementById('stockError');
+      const errorMsg = document.getElementById('stockErrorMsg');
+      const btn = document.getElementById('addToCartBtn');
+
+      if (qty > maxStock) {
+        document.getElementById('qty').value = maxStock;
+        errorDiv.style.display = 'flex';
+        errorMsg.textContent = `Stock insuffisant. Il ne reste que ${maxStock} exemplaire${maxStock > 1 ? 's' : ''}.`;
+        if (btn) btn.disabled = true;
+      } else {
+        errorDiv.style.display = 'none';
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    // Validate on manual input change
+    document.getElementById('qty').addEventListener('input', function() {
+      let val = parseInt(this.value);
+      if (isNaN(val) || val < 1) this.value = 1;
+      if (val > maxStock) this.value = maxStock;
+      checkStock();
+    });
+
+    // Validate before form submit
+    document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+      const qty = parseInt(document.getElementById('qty').value);
+      if (qty > maxStock || maxStock === 0) {
+        e.preventDefault();
+        const errorDiv = document.getElementById('stockError');
+        const errorMsg = document.getElementById('stockErrorMsg');
+        errorDiv.style.display = 'flex';
+        errorMsg.textContent = maxStock === 0
+          ? 'Ce produit est en rupture de stock.'
+          : `Stock insuffisant. Il ne reste que ${maxStock} exemplaire${maxStock > 1 ? 's' : ''}.`;
+      }
+    });
 
     // Option selection (radio-like behavior per group)
     document.querySelectorAll('.option-group').forEach(group => {
@@ -124,3 +203,4 @@
   </script>
 
 <%- include('partials/footer') %>
+

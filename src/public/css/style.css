@@ -2032,6 +2032,125 @@ textarea.form-input {
 }
 
 /* ===================================
+   STOCK — Alerts & Badges
+   =================================== */
+
+/* Stock alert banners (product detail) */
+.stock-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+  border-left: 3px solid;
+}
+
+.stock-alert--warning {
+  background: #fff8e1;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.stock-alert--warning .material-symbols-outlined {
+  color: #f59e0b;
+}
+
+.stock-alert--danger {
+  background: #fef2f2;
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.stock-alert--danger .material-symbols-outlined {
+  color: var(--error);
+}
+
+/* Product card stock badges */
+.product-card__badge--danger {
+  background: var(--error) !important;
+}
+
+.product-card__badge--warning {
+  background: #f59e0b !important;
+  color: #fff !important;
+}
+
+/* Out of stock product card */
+.product-card--out-of-stock {
+  position: relative;
+}
+
+.product-card--out-of-stock .product-card__image {
+  opacity: 0.5;
+  filter: grayscale(40%);
+}
+
+/* Product detail out-of-stock overlay */
+.product-detail__out-of-stock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.product-detail__out-of-stock-overlay span {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--error);
+  padding: 0.75rem 2rem;
+}
+
+/* Disabled button */
+.btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Stock hint under quantity selector */
+.stock-hint {
+  display: block;
+  font-size: 0.65rem;
+  color: #f59e0b;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+  font-weight: 600;
+}
+
+/* Cart item stock warnings */
+.cart-item__stock-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  color: #f59e0b;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+}
+
+.cart-item__stock-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  color: var(--error);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+}
+
+/* ===================================
    ADMIN — Navbar Icon
    =================================== */
 .navbar__action-btn--admin {

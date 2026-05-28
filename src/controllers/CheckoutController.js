@@ -1,4 +1,5 @@
 const OrderModel = require('../models/OrderModel');
+const ProductModel = require('../models/ProductModel');
 
 /**
  * Contrôleur pour le processus de checkout.
@@ -7,6 +8,7 @@ const OrderModel = require('../models/OrderModel');
 class CheckoutController {
   constructor() {
     this.orderModel = new OrderModel();
+    this.productModel = new ProductModel();
   }
 
   /**
@@ -41,6 +43,15 @@ class CheckoutController {
       const { first_name, last_name, email, address, department, country, payment_method } = req.body;
       const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
+      // Vérifier le stock de chaque produit avant de créer la commande
+      for (const item of cart) {
+        const product = await this.productModel.findActiveById(item.product_id);
+        if (!product || product.stock < item.quantity) {
+          // Stock insuffisant, rediriger vers le panier
+          return res.redirect('/cart');
+        }
+      }
+
       // Créer la commande
       const orderResult = await this.orderModel.create({
         userId: req.session.user ? req.session.user.id : null,
@@ -55,7 +66,7 @@ class CheckoutController {
 
       const orderId = orderResult.insertId;
 
-      // Ajouter les items
+      // Ajouter les items et décrémenter le stock
       for (const item of cart) {
         const itemResult = await this.orderModel.addItem(orderId, item);
 
@@ -63,6 +74,9 @@ class CheckoutController {
         if (item.options && item.options.length > 0) {
           await this.orderModel.addItemOptions(itemResult.insertId, item.options);
         }
+
+        // Décrémenter le stock du produit
+        await this.productModel.decrementStock(item.product_id, item.quantity);
       }
 
       // Créer le paiement
@@ -103,3 +117,4 @@ class CheckoutController {
 }
 
 module.exports = CheckoutController;
+

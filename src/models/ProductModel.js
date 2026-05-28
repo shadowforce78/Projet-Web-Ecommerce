@@ -135,6 +135,21 @@ class ProductModel {
     );
     return products;
   }
+
+  /**
+   * Décrémente le stock d'un produit.
+   * Utilisé uniquement lorsqu'une commande est confirmée/payée.
+   * @param {number} productId
+   * @param {number} quantity - Quantité à retirer du stock
+   * @returns {Promise<Object>} Résultat de la mise à jour
+   */
+  async decrementStock(productId, quantity) {
+    const [result] = await this.db.query(
+      'UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?',
+      [quantity, productId, quantity]
+    );
+    return result;
+  }
 }
 
 module.exports = ProductModel;

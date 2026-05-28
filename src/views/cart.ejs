@@ -25,6 +25,18 @@
                     </span>
                   <% } %>
                   <h3 class="cart-item__name"><%= item.name %></h3>
+                  <% if (item.stock !== undefined && item.stock <= 10 && item.stock > 0) { %>
+                    <span class="cart-item__stock-warning">
+                      <span class="material-symbols-outlined" style="font-size:0.8rem;">local_fire_department</span>
+                      Plus que <%= item.stock %> en stock
+                    </span>
+                  <% } %>
+                  <% if (item.stock !== undefined && item.quantity > item.stock) { %>
+                    <span class="cart-item__stock-error">
+                      <span class="material-symbols-outlined" style="font-size:0.8rem;">error</span>
+                      Stock insuffisant (max: <%= item.stock %>)
+                    </span>
+                  <% } %>
                 </div>
                 <div class="cart-item__right">
                   <!-- Quantité -->
@@ -35,7 +47,7 @@
                         <span class="material-symbols-outlined">remove</span>
                       </button>
                       <span style="padding:0 1rem;font-family:var(--font-headline);font-weight:700;font-size:1rem;"><%= String(item.quantity).padStart(2, '0') %></span>
-                      <button type="submit" name="quantity" value="<%= item.quantity + 1 %>">
+                      <button type="submit" name="quantity" value="<%= item.quantity + 1 %>" <% if (item.stock !== undefined && item.quantity >= item.stock) { %>disabled<% } %>>
                         <span class="material-symbols-outlined">add</span>
                       </button>
                     </div>

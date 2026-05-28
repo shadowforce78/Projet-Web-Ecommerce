@@ -46,6 +46,7 @@ async function initDatabase() {
       description text,
       image_url varchar(255),
       base_price decimal(10,2) NOT NULL,
+      stock integer NOT NULL DEFAULT 100,
       is_active boolean NOT NULL DEFAULT true,
       created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (category_id) REFERENCES categories(id)

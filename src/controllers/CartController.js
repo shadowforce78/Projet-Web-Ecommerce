@@ -14,8 +14,17 @@ class CartController {
   /**
    * Affiche le panier.
    */
-  show(req, res) {
+  async show(req, res) {
     const cart = req.session.cart || [];
+
+    // Mettre à jour les infos de stock pour chaque article du panier
+    for (const item of cart) {
+      const product = await this.productModel.findActiveById(item.product_id);
+      if (product) {
+        item.stock = product.stock;
+      }
+    }
+
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     res.render('cart', {
@@ -36,6 +45,11 @@ class CartController {
       const product = await this.productModel.findActiveById(product_id);
       if (!product) {
         return res.redirect('/products');
+      }
+
+      // Vérifier le stock disponible
+      if (product.stock <= 0) {
+        return res.redirect(`/products/${product_id}`);
       }
 
       let extraPrice = 0;
@@ -64,8 +78,18 @@ class CartController {
         item.optionKey === optionKey
       );
 
+      // Calculer la quantité totale demandée (déjà dans le panier + nouvelle)
+      const currentQtyInCart = existingIndex > -1 ? req.session.cart[existingIndex].quantity : 0;
+      const totalRequested = currentQtyInCart + qty;
+
+      // Bloquer si le stock est insuffisant
+      if (totalRequested > product.stock) {
+        return res.redirect(`/products/${product_id}`);
+      }
+
       if (existingIndex > -1) {
-        req.session.cart[existingIndex].quantity += qty;
+        req.session.cart[existingIndex].quantity = totalRequested;
+        req.session.cart[existingIndex].stock = product.stock;
       } else {
         req.session.cart.push({
           product_id: product.id,
@@ -74,7 +98,8 @@ class CartController {
           price: parseFloat(product.base_price) + extraPrice,
           quantity: qty,
           options: selectedOptions,
-          optionKey
+          optionKey,
+          stock: product.stock
         });
       }
 
@@ -88,7 +113,7 @@ class CartController {
   /**
    * Modifie la quantité d'un article du panier.
    */
-  update(req, res) {
+  async update(req, res) {
     const { index, quantity } = req.body;
     const idx = parseInt(index);
     const qty = parseInt(quantity);
@@ -97,7 +122,18 @@ class CartController {
       if (qty <= 0) {
         req.session.cart.splice(idx, 1);
       } else {
-        req.session.cart[idx].quantity = qty;
+        // Vérifier le stock avant de mettre à jour
+        const item = req.session.cart[idx];
+        const product = await this.productModel.findActiveById(item.product_id);
+
+        if (product && qty <= product.stock) {
+          req.session.cart[idx].quantity = qty;
+          req.session.cart[idx].stock = product.stock;
+        } else if (product) {
+          // Limiter à la quantité max disponible
+          req.session.cart[idx].quantity = product.stock;
+          req.session.cart[idx].stock = product.stock;
+        }
       }
     }
 
@@ -120,3 +156,4 @@ class CartController {
 }
 
 module.exports = CartController;
+
