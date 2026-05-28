@@ -1,76 +1,267 @@
 <%- include('../partials/header') %>
 
-  <main class="admin-page container">
-    <div class="admin-header">
-      <div class="admin-header__top">
-        <span class="section-label">Administration</span>
-        <div class="admin-header__badge">
-          <span class="material-symbols-outlined">shield_person</span>
-          Admin
-        </div>
+<main class="admin-page container">
+  <div class="admin-header">
+    <div class="admin-header__top">
+      <span class="section-label">Administration</span>
+      <div class="admin-header__badge">
+        <span class="material-symbols-outlined">shield_person</span>
+        Admin
       </div>
-      <h1 class="admin-header__title">Dashboard</h1>
-      <p class="admin-header__subtitle">Bienvenue, <%= profile.email %></p>
+    </div>
+    <h1 class="admin-header__title">Dashboard</h1>
+    <p class="admin-header__subtitle">Bienvenue, <%= profile.email %></p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="admin-stats">
+    <div class="admin-stat-card">
+      <div class="admin-stat-card__icon">
+        <span class="material-symbols-outlined">inventory_2</span>
+      </div>
+      <div class="admin-stat-card__content">
+        <span class="admin-stat-card__value"><%= stats.totalProducts %></span>
+        <span class="admin-stat-card__label">Produits</span>
+      </div>
+    </div>
+    <div class="admin-stat-card">
+      <div class="admin-stat-card__icon">
+        <span class="material-symbols-outlined">package_2</span>
+      </div>
+      <div class="admin-stat-card__content">
+        <span class="admin-stat-card__value"><%= stats.totalOrders %></span>
+        <span class="admin-stat-card__label">Commandes</span>
+      </div>
+    </div>
+    <div class="admin-stat-card">
+      <div class="admin-stat-card__icon">
+        <span class="material-symbols-outlined">group</span>
+      </div>
+      <div class="admin-stat-card__content">
+        <span class="admin-stat-card__value"><%= stats.totalUsers %></span>
+        <span class="admin-stat-card__label">Clients</span>
+      </div>
+    </div>
+    <div
+      class="admin-stat-card <%= stats.lowStockCount > 0 ? 'admin-stat-card--alert' : '' %>">
+      <div class="admin-stat-card__icon">
+        <span class="material-symbols-outlined">warning</span>
+      </div>
+      <div class="admin-stat-card__content">
+        <span class="admin-stat-card__value"><%= stats.lowStockCount %></span>
+        <span class="admin-stat-card__label">Stock faible</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message de succès -->
+  <% if (successMessage) { %>
+  <div class="admin-alert admin-alert--success">
+    <span class="material-symbols-outlined">check_circle</span>
+    <span><%= successMessage %></span>
+    <button type="button" class="admin-alert__close"
+      onclick="this.parentElement.remove()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <% } %>
+
+  <!-- Gestion des stocks -->
+  <div class="admin-content">
+    <div class="admin-section-header">
+      <div>
+        <h2 class="admin-section-title">
+          <span class="material-symbols-outlined">inventory</span>
+          Gestion des stocks
+        </h2>
+        <p class="admin-section-subtitle"><%= products.length %> produit<%=
+          products.length > 1 ? 's' : '' %></p>
+      </div>
     </div>
 
-    <!-- Stats Cards (vide pour le moment) -->
-    <div class="admin-stats">
-      <div class="admin-stat-card">
-        <div class="admin-stat-card__icon">
-          <span class="material-symbols-outlined">inventory_2</span>
-        </div>
-        <div class="admin-stat-card__content">
-          <span class="admin-stat-card__value">—</span>
-          <span class="admin-stat-card__label">Produits</span>
-        </div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-card__icon">
-          <span class="material-symbols-outlined">package_2</span>
-        </div>
-        <div class="admin-stat-card__content">
-          <span class="admin-stat-card__value">—</span>
-          <span class="admin-stat-card__label">Commandes</span>
-        </div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-card__icon">
-          <span class="material-symbols-outlined">group</span>
-        </div>
-        <div class="admin-stat-card__content">
-          <span class="admin-stat-card__value">—</span>
-          <span class="admin-stat-card__label">Clients</span>
-        </div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-card__icon">
-          <span class="material-symbols-outlined">warning</span>
-        </div>
-        <div class="admin-stat-card__content">
-          <span class="admin-stat-card__value">—</span>
-          <span class="admin-stat-card__label">Stock faible</span>
-        </div>
+    <!-- Contrôles : Recherche + Tri -->
+    <div class="admin-controls">
+      <form action="/admin" method="GET" class="admin-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" name="search" placeholder="Rechercher un produit..."
+          value="<%= search %>">
+        <input type="hidden" name="sort" value="<%= sort %>">
+        <% if (search) { %>
+        <a href="/admin?sort=<%= sort %>" class="admin-search__clear">
+          <span class="material-symbols-outlined">close</span>
+        </a>
+        <% } %>
+      </form>
+      <div class="admin-sort">
+        <span class="admin-sort__label">Trier par</span>
+        <select
+          onchange="window.location.href='/admin?sort=' + this.value + '<%= search ? '&search=' + encodeURIComponent(search) : '' %>'">
+          <option value="stock_asc" <%=sort === 'stock_asc' ? 'selected' : ''
+            %>>Stock croissant</option>
+          <option value="stock_desc" <%=sort === 'stock_desc' ? 'selected' : ''
+            %>>Stock décroissant</option>
+          <option value="name_asc" <%=sort === 'name_asc' ? 'selected' : ''
+            %>>Nom A-Z</option>
+          <option value="name_desc" <%=sort === 'name_desc' ? 'selected' : ''
+            %>>Nom Z-A</option>
+          <option value="price_asc" <%=sort === 'price_asc' ? 'selected' : ''
+            %>>Prix croissant</option>
+          <option value="price_desc" <%=sort === 'price_desc' ? 'selected' : ''
+            %>>Prix décroissant</option>
+        </select>
       </div>
     </div>
 
-    <!-- Contenu principal -->
-    <div class="admin-content">
-      <div class="admin-empty-state">
-        <span class="material-symbols-outlined admin-empty-state__icon">construction</span>
-        <h2 class="admin-empty-state__title">Gestion des stocks</h2>
-        <p class="admin-empty-state__text">
-          Le système de gestion des stocks sera bientôt disponible ici.
-          <br>Vous pourrez gérer les quantités, les alertes de stock faible et les réapprovisionnements.
-        </p>
-      </div>
+    <!-- Tableau des produits -->
+    <% if (products.length > 0) { %>
+    <div class="admin-table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th class="admin-table__th--product">Produit</th>
+            <th>Catégorie</th>
+            <th>Prix</th>
+            <th>
+              <a
+                href="/admin?sort=<%= sort === 'stock_asc' ? 'stock_desc' : 'stock_asc' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                class="admin-table__sort-link">
+                Stock
+                <span class="material-symbols-outlined" style="font-size:1rem;">
+                  <%= sort === 'stock_asc' ? 'arrow_upward' : sort ===
+                  'stock_desc' ? 'arrow_downward' : 'swap_vert' %>
+                </span>
+              </a>
+            </th>
+            <th>Statut</th>
+            <th>Modifier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+          <tr
+            class="<%= product.stock === 0 ? 'admin-table__row--danger' : product.stock <= 10 ? 'admin-table__row--warning' : '' %>">
+            <td>
+              <div class="admin-product-cell">
+                <% if (product.image_url) { %>
+                <img src="<%= product.image_url %>" alt="<%= product.name %>"
+                  class="admin-product-cell__img">
+                <% } else { %>
+                <div
+                  class="admin-product-cell__img admin-product-cell__img--placeholder">
+                  <span class="material-symbols-outlined">image</span>
+                </div>
+                <% } %>
+                <div>
+                  <a href="/products/<%= product.id %>"
+                    class="admin-product-cell__name" target="_blank"><%=
+                    product.name %></a>
+                  <span class="admin-product-cell__id">#<%= product.id %></span>
+                </div>
+              </div>
+            </td>
+            <td><span class="admin-category-tag"><%= product.category_name
+                %></span></td>
+            <td class="admin-table__price"><%=
+              parseFloat(product.base_price).toFixed(2) %> €</td>
+            <td>
+              <span
+                class="admin-stock-value <%= product.stock === 0 ? 'admin-stock-value--danger' : product.stock <= 10 ? 'admin-stock-value--warning' : '' %>">
+                <%= product.stock %>
+              </span>
+            </td>
+            <td>
+              <% if (product.stock === 0) { %>
+              <span class="admin-status-badge admin-status-badge--danger">
+                <span class="material-symbols-outlined">error</span>
+                Rupture
+              </span>
+              <% } else if (product.stock <= 10) { %>
+              <span class="admin-status-badge admin-status-badge--warning">
+                <span class="material-symbols-outlined">warning</span>
+                Faible
+              </span>
+              <% } else { %>
+              <span class="admin-status-badge admin-status-badge--ok">
+                <span class="material-symbols-outlined">check_circle</span>
+                OK
+              </span>
+              <% } %>
+            </td>
+            <td>
+              <form action="/admin/stock/update" method="POST"
+                class="admin-stock-form">
+                <input type="hidden" name="product_id"
+                  value="<%= product.id %>">
+                <div class="admin-stock-input-group">
+                  <input type="number" name="stock" value="<%= product.stock %>"
+                    min="0" class="admin-stock-input"
+                    id="stock-<%= product.id %>">
+                  <button type="submit" class="admin-stock-btn"
+                    title="Enregistrer">
+                    <span class="material-symbols-outlined">save</span>
+                  </button>
+                </div>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
     </div>
+    <% } else { %>
+    <div class="admin-empty-state">
+      <span
+        class="material-symbols-outlined admin-empty-state__icon">search_off</span>
+      <h2 class="admin-empty-state__title">Aucun produit trouvé</h2>
+      <p class="admin-empty-state__text">
+        Aucun produit ne correspond à votre recherche.
+      </p>
+      <a href="/admin" class="btn btn--outline-dark btn--sm"
+        style="margin-top:1rem;">Réinitialiser</a>
+    </div>
+    <% } %>
+  </div>
 
-    <div class="admin-footer-nav">
-      <a href="/dashboard" class="btn btn--outline-dark">
-        <span class="material-symbols-outlined">arrow_back</span>
-        Retour au compte
-      </a>
-    </div>
-  </main>
+  <div class="admin-footer-nav">
+    <a href="/dashboard" class="btn btn--outline-dark">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Retour au compte
+    </a>
+  </div>
+</main>
+
+<script>
+    // Auto-submit on Enter in stock input
+    document.querySelectorAll('.admin-stock-input').forEach(input => {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.closest('form').submit();
+        }
+      });
+
+      // Highlight changed values
+      const originalValue = input.value;
+      input.addEventListener('input', function() {
+        if (this.value !== originalValue) {
+          this.classList.add('admin-stock-input--changed');
+          this.closest('.admin-stock-input-group').querySelector('.admin-stock-btn').classList.add('admin-stock-btn--active');
+        } else {
+          this.classList.remove('admin-stock-input--changed');
+          this.closest('.admin-stock-input-group').querySelector('.admin-stock-btn').classList.remove('admin-stock-btn--active');
+        }
+      });
+    });
+
+    // Auto-dismiss success alert after 4 seconds
+    const alert = document.querySelector('.admin-alert--success');
+    if (alert) {
+      setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-10px)';
+        setTimeout(() => alert.remove(), 300);
+      }, 4000);
+    }
+  </script>
 
 <%- include('../partials/footer') %>
