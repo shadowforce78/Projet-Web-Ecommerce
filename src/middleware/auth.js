@@ -16,6 +16,20 @@ class AuthMiddleware {
     }
     res.redirect('/auth/login');
   }
+
+  /**
+   * Vérifie si l'utilisateur est admin.
+   * Redirige vers le dashboard utilisateur si ce n'est pas le cas.
+   * @param {Object} req
+   * @param {Object} res
+   * @param {Function} next
+   */
+  static isAdmin(req, res, next) {
+    if (req.session && req.session.user && req.session.user.status === 'admin') {
+      return next();
+    }
+    res.redirect('/dashboard');
+  }
 }
 
 module.exports = AuthMiddleware;

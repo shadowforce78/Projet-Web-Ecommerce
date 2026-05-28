@@ -34,12 +34,13 @@ class UserModel {
    * @param {string} email
    * @param {string|null} phone
    * @param {string} passwordHash - Mot de passe déjà hashé
+   * @param {string} status - Rôle de l'utilisateur ('admin' ou 'user'), défaut 'user'
    * @returns {Promise<Object>} Résultat de l'insertion (contient insertId)
    */
-  async create(email, phone, passwordHash) {
+  async create(email, phone, passwordHash, status = 'user') {
     const [result] = await this.db.query(
-      'INSERT INTO users (email, phone, password_hash, created_at) VALUES (?, ?, ?, NOW())',
-      [email, phone || null, passwordHash]
+      'INSERT INTO users (email, phone, password_hash, status, created_at) VALUES (?, ?, ?, ?, NOW())',
+      [email, phone || null, passwordHash, status]
     );
     return result;
   }

@@ -69,6 +69,7 @@ class App {
     const checkoutRoutes = require('./routes/checkout');
     const authRoutes = require('./routes/auth');
     const dashboardRoutes = require('./routes/dashboard');
+    const adminRoutes = require('./routes/admin');
     const pagesRoutes = require('./routes/pages');
 
     this.app.use('/', homeRoutes);
@@ -77,6 +78,7 @@ class App {
     this.app.use('/checkout', checkoutRoutes);
     this.app.use('/auth', authRoutes);
     this.app.use('/dashboard', dashboardRoutes);
+    this.app.use('/admin', adminRoutes);
     this.app.use('/', pagesRoutes);
   }
 

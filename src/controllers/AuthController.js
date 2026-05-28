@@ -39,7 +39,8 @@ class AuthController {
       req.session.user = {
         id: user.id,
         email: user.email,
-        phone: user.phone
+        phone: user.phone,
+        status: user.status
       };
 
       res.redirect('/dashboard');
@@ -80,7 +81,8 @@ class AuthController {
       req.session.user = {
         id: result.insertId,
         email,
-        phone: phone || null
+        phone: phone || null,
+        status: 'user'
       };
 
       res.redirect('/dashboard');

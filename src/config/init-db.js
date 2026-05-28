@@ -31,6 +31,7 @@ async function initDatabase() {
       email varchar(255) UNIQUE NOT NULL,
       phone varchar(255),
       password_hash varchar(255) NOT NULL,
+      status ENUM('admin', 'user') NOT NULL DEFAULT 'user',
       created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS categories (
@@ -274,8 +275,8 @@ async function initDatabase() {
   // Utilisateur démo
   const demoPassword = await bcrypt.hash('demo123', 10);
   await connection.query(
-    'INSERT IGNORE INTO users (email, phone, password_hash, created_at) VALUES (?, ?, ?, NOW())',
-    ['demo@monolith.com', '+33 6 12 34 56 78', demoPassword]
+    'INSERT IGNORE INTO users (email, phone, password_hash, status, created_at) VALUES (?, ?, ?, ?, NOW())',
+    ['demo@monolith.com', '+33 6 12 34 56 78', demoPassword, 'admin']
   );
   console.log('  ✅ Utilisateur démo créé (demo@monolith.com / demo123)');
 

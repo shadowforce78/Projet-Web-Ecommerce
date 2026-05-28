@@ -2030,3 +2030,205 @@ textarea.form-input {
     flex-direction: column;
   }
 }
+
+/* ===================================
+   ADMIN — Navbar Icon
+   =================================== */
+.navbar__action-btn--admin {
+  color: var(--secondary) !important;
+  position: relative;
+}
+
+.navbar__action-btn--admin::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--secondary);
+  border-radius: 50%;
+}
+
+.navbar__action-btn--admin:hover {
+  color: #5d4201 !important;
+}
+
+/* ===================================
+   ADMIN — Dashboard Page
+   =================================== */
+.admin-page {
+  padding-top: 8rem;
+  padding-bottom: 4rem;
+}
+
+.admin-header {
+  margin-bottom: 3rem;
+}
+
+.admin-header__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.admin-header__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--secondary);
+  color: white;
+  font-family: var(--font-headline);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.4rem 1rem;
+}
+
+.admin-header__badge .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.admin-header__title {
+  font-family: var(--font-headline);
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.admin-header__subtitle {
+  color: var(--on-surface-variant);
+  font-size: 0.85rem;
+}
+
+/* Admin Stats Cards */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.admin-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  transition: all 0.3s ease;
+}
+
+.admin-stat-card:hover {
+  border-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.admin-stat-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-container);
+  color: var(--secondary);
+}
+
+.admin-stat-card__icon .material-symbols-outlined {
+  font-size: 1.5rem;
+}
+
+.admin-stat-card__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-stat-card__value {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.admin-stat-card__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin-top: 0.25rem;
+}
+
+/* Admin Content Area */
+.admin-content {
+  margin-bottom: 3rem;
+}
+
+.admin-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 2rem;
+  background: var(--surface-container-lowest);
+  border: 1px dashed var(--outline-variant);
+}
+
+.admin-empty-state__icon {
+  font-size: 3rem;
+  color: var(--outline);
+  margin-bottom: 1.5rem;
+}
+
+.admin-empty-state__title {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.admin-empty-state__text {
+  color: var(--on-surface-variant);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  max-width: 500px;
+}
+
+/* Admin Footer Nav */
+.admin-footer-nav {
+  padding-top: 2rem;
+  border-top: 1px solid var(--surface-container-high);
+}
+
+/* Responsive Admin */
+@media (max-width: 1024px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-header__title {
+    font-size: 2.5rem;
+  }
+
+  .admin-header__top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

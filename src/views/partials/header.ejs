@@ -25,6 +25,11 @@
             <span class="navbar__badge"><%= cartCount %></span>
           <% } %>
         </a>
+        <% if (user && user.status === 'admin') { %>
+          <a href="/admin" class="navbar__action-btn navbar__action-btn--admin" title="Administration">
+            <span class="material-symbols-outlined">shield_person</span>
+          </a>
+        <% } %>
         <% if (user) { %>
           <a href="/dashboard" class="navbar__action-btn">
             <span class="material-symbols-outlined">person</span>

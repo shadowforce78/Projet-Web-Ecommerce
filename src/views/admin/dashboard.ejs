@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+  <main class="admin-page container">
+    <div class="admin-header">
+      <div class="admin-header__top">
+        <span class="section-label">Administration</span>
+        <div class="admin-header__badge">
+          <span class="material-symbols-outlined">shield_person</span>
+          Admin
+        </div>
+      </div>
+      <h1 class="admin-header__title">Dashboard</h1>
+      <p class="admin-header__subtitle">Bienvenue, <%= profile.email %></p>
+    </div>
+
+    <!-- Stats Cards (vide pour le moment) -->
+    <div class="admin-stats">
+      <div class="admin-stat-card">
+        <div class="admin-stat-card__icon">
+          <span class="material-symbols-outlined">inventory_2</span>
+        </div>
+        <div class="admin-stat-card__content">
+          <span class="admin-stat-card__value">—</span>
+          <span class="admin-stat-card__label">Produits</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card__icon">
+          <span class="material-symbols-outlined">package_2</span>
+        </div>
+        <div class="admin-stat-card__content">
+          <span class="admin-stat-card__value">—</span>
+          <span class="admin-stat-card__label">Commandes</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card__icon">
+          <span class="material-symbols-outlined">group</span>
+        </div>
+        <div class="admin-stat-card__content">
+          <span class="admin-stat-card__value">—</span>
+          <span class="admin-stat-card__label">Clients</span>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-card__icon">
+          <span class="material-symbols-outlined">warning</span>
+        </div>
+        <div class="admin-stat-card__content">
+          <span class="admin-stat-card__value">—</span>
+          <span class="admin-stat-card__label">Stock faible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="admin-content">
+      <div class="admin-empty-state">
+        <span class="material-symbols-outlined admin-empty-state__icon">construction</span>
+        <h2 class="admin-empty-state__title">Gestion des stocks</h2>
+        <p class="admin-empty-state__text">
+          Le système de gestion des stocks sera bientôt disponible ici.
+          <br>Vous pourrez gérer les quantités, les alertes de stock faible et les réapprovisionnements.
+        </p>
+      </div>
+    </div>
+
+    <div class="admin-footer-nav">
+      <a href="/dashboard" class="btn btn--outline-dark">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Retour au compte
+      </a>
+    </div>
+  </main>
+
+<%- include('../partials/footer') %>
